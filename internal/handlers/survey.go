@@ -169,12 +169,26 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 			return
 		}
 		// Validate entries
-		// TODO: validate classes in entries
+		// Check if submitted entry count matches question count
 		if len(entries) != survey.NumQuestions {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "question number mismatch",
 			})
 			return
+		}
+		// Check if all submitted entry classes are valid
+		classesMap := make(map[string]struct{})
+		for _, class := range survey.Classes {
+			var v struct{}
+			classesMap[class] = v
+		}
+		for _, entry := range entries {
+			if _, ok := classesMap[entry.Class]; !ok {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": "invalid class",
+				})
+				return
+			}
 		}
 
 		// Insert submission
