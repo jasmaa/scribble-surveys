@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/jasmaa/drawing-survey/internal/handlers"
 )
@@ -24,12 +28,24 @@ func main() {
 		port = "3000"
 	}
 
+	mongoURI := os.Getenv("MONGO_URI")
+
+	// Connect to Mongo
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
+	if err != nil {
+		panic(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		panic(err)
+	}
+	defer client.Disconnect(ctx)
+
 	r := gin.Default()
-
-	r.POST("/create", handlers.HandleCreate())
-	r.GET("/survey/:surveyID/info", handlers.HandleInfo())
-	r.POST("/survey/:surveyID/submit", handlers.HandleSubmit())
+	r.POST("/create", handlers.HandleCreate(client))
+	r.GET("/survey/:surveyID/info", handlers.HandleInfo(client))
+	r.POST("/survey/:surveyID/submit", handlers.HandleSubmit(client))
 	r.POST("/survey/:surveyID/export", handlers.HandleExport())
-
 	r.Run(fmt.Sprintf(":%s", port))
 }

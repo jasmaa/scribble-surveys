@@ -3,16 +3,20 @@
 ## Models
 
     Survey {
-      id: UUID
+      id: String
+      secretKey: String
       classes: [String]
       numQuestions: Integer
     }
 
     Submission {
-      submitterID: UUID
-      surveyID: UUID
-      class: String
-      date: DateTime
+      submitterID: String
+      surveyID: String
+      entries: [{
+        class: String
+        entry: String
+      }]
+      timestamp: DateTime
     }
 
 ## Routes
@@ -23,8 +27,8 @@
       classes: [...]
     }
     200 {
-      surveyID: UUID
-      secretToken: UUID
+      surveyID: String
+      secretToken: String
     }
 
     GET /survey/{surveyID}/info
@@ -38,7 +42,10 @@
 
     POST /survey/{surveyID}/submit
     {
-      entries: [String]
+      entries: [{
+        class: String
+        entry: String
+      }]
     }
     200
     404 {
@@ -47,7 +54,7 @@
 
     POST /survey/{surveyID}/export
     {
-      secretToken: UUID
+      secretToken: String
     }
     200 export.zip
     404 {
