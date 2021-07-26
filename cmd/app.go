@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -43,9 +44,13 @@ func main() {
 	defer client.Disconnect(ctx)
 
 	r := gin.Default()
-	r.POST("/create", handlers.HandleCreate(client))
-	r.GET("/survey/:surveyID/info", handlers.HandleInfo(client))
-	r.POST("/survey/:surveyID/submit", handlers.HandleSubmit(client))
-	r.POST("/survey/:surveyID/export", handlers.HandleExport())
+
+	r.Use(cors.Default())
+
+	r.POST("/api/v1/survey", handlers.HandleCreate(client))
+	r.GET("/api/v1/survey/:surveyID", handlers.HandleInfo(client))
+	r.POST("/api/v1/survey/:surveyID/submit", handlers.HandleSubmit(client))
+	r.POST("/api/v1/survey/:surveyID/export", handlers.HandleExport())
+
 	r.Run(fmt.Sprintf(":%s", port))
 }

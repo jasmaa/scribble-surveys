@@ -160,6 +160,7 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 
 		// Get post form
 		entriesData := c.PostForm("entries")
+
 		var entries []Entry
 		err = json.Unmarshal([]byte(entriesData), &entries)
 		if err != nil {
