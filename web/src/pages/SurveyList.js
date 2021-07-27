@@ -26,7 +26,7 @@ export default function SurveyList() {
       <ul>
         {surveys.map(survey => (
           <li>
-            <a href={`/surveys/${survey.surveyID}`}>{survey.surveyID}</a>
+            <a href={`/surveys/${survey.surveyID}`}>{survey.title}</a>
           </li>
         ))}
       </ul>

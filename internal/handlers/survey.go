@@ -17,6 +17,8 @@ import (
 // Survey represents a survey
 type Survey struct {
 	ID           interface{} `bson:"_id,omitempty"`
+	Title        string      `json:"title"`
+	ExitMessage  string      `json:"exitMessage"`
 	Classes      []string    `json:"classes"`
 	NumQuestions int         `json:"numQuestions"`
 	SecretToken  string      `json:"secretToken"`
@@ -41,6 +43,13 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 		collection := client.Database("drawing_survey").Collection("surveys")
 
 		// Get post form and validate data
+		title := c.PostForm("title")
+		if len(title) == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "title is required",
+			})
+			return
+		}
 		classesData := c.PostForm("classes")
 		if len(classesData) == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -55,6 +64,8 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 			})
 			return
 		}
+		exitMessage := c.PostForm("exitMessage")
+
 		var classes []string
 		err := json.Unmarshal([]byte(classesData), &classes)
 		if err != nil {
@@ -79,8 +90,10 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 
 		// Insert survey
 		survey := Survey{
+			Title:        title,
 			Classes:      classes,
 			NumQuestions: numQuestions,
+			ExitMessage:  exitMessage,
 			SecretToken:  uuid.New().String(),
 		}
 
@@ -131,6 +144,7 @@ func HandleList(client *mongo.Client) func(c *gin.Context) {
 		for i := 0; i < len(surveys); i++ {
 			res[i] = gin.H{
 				"surveyID": surveys[i].ID,
+				"title":    surveys[i].Title,
 			}
 		}
 		c.JSON(http.StatusOK, res)
@@ -169,8 +183,10 @@ func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusOK, gin.H{
+			"title":        survey.Title,
 			"numQuestions": survey.NumQuestions,
 			"classes":      survey.Classes,
+			"exitMessage":  survey.ExitMessage,
 		})
 	}
 }

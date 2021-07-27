@@ -88,7 +88,7 @@ export default function Survey() {
   // Survey is done
   if (isDone) {
     return (
-      <Done msg={surveyData.message ?? 'Thank you for taking this survey!'} />
+      <Done exitMessage={!!surveyData.exitMessage ? surveyData.exitMessage : 'Thank you for taking this survey!'} />
     );
   }
 

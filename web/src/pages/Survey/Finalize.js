@@ -16,13 +16,13 @@ export default function Finalize({ currQuestion, questions, answers, surveyData,
 
   return (
     <>
-      <h1>Review</h1>
+      <h1>{surveyData.title}: Review</h1>
       {
         new Array(surveyData.numQuestions)
           .fill(null)
           .map((_, i) => (
             <>
-              <h2>Question {i + 1}: {questions[i]}</h2>
+              <h2>Question {i + 1}: Draw "{questions[i]}"</h2>
               <button onClick={() => {
                 moveToQuestion(i);
               }}>Edit</button>

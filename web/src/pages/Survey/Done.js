@@ -1,8 +1,8 @@
-export default function Done({ msg }) {
+export default function Done({ exitMessage }) {
   return (
     <div>
-      <h1>{msg}</h1>
-      <p>You may now close this page or take another survey.</p>
+      <h1>{exitMessage}</h1>
+      <p>You may now close this page or take <a href="/surveys">another survey</a>.</p>
     </div>
   );
 }

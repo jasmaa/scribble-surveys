@@ -19,7 +19,8 @@ export default function Question({ canvasRef, currQuestion, questions, answers, 
 
   return (
     <>
-      <h1>Question {currQuestion + 1}: {questions[currQuestion]}</h1>
+      <h1>{surveyData.title}</h1>
+      <h2>Question {currQuestion + 1}: Draw "{questions[currQuestion]}"</h2>
 
       <CanvasDraw
         ref={canvasRef}
