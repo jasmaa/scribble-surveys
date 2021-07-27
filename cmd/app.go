@@ -47,10 +47,12 @@ func main() {
 
 	r.Use(cors.Default())
 
-	r.POST("/api/v1/survey", handlers.HandleCreate(client))
-	r.GET("/api/v1/survey/:surveyID", handlers.HandleInfo(client))
-	r.POST("/api/v1/survey/:surveyID/submit", handlers.HandleSubmit(client))
-	r.POST("/api/v1/survey/:surveyID/export", handlers.HandleExport())
+	apiV1 := r.Group("/api/v1")
+	apiV1.POST("/survey", handlers.HandleCreate(client))
+	apiV1.GET("/survey", handlers.HandleList(client))
+	apiV1.GET("/survey/:surveyID", handlers.HandleInfo(client))
+	apiV1.POST("/survey/:surveyID/submit", handlers.HandleSubmit(client))
+	apiV1.POST("/survey/:surveyID/export", handlers.HandleExport())
 
 	r.Run(fmt.Sprintf(":%s", port))
 }

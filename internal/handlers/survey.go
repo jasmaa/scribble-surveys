@@ -16,9 +16,10 @@ import (
 
 // Survey represents a survey
 type Survey struct {
-	Classes      []string `json:"classes"`
-	NumQuestions int      `json:"numQuestions"`
-	SecretToken  string   `json:"secretToken"`
+	ID           interface{} `bson:"_id,omitempty"`
+	Classes      []string    `json:"classes"`
+	NumQuestions int         `json:"numQuestions"`
+	SecretToken  string      `json:"secretToken"`
 }
 
 // Submission represents a submission for a survey
@@ -98,7 +99,46 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 	}
 }
 
-// HandleInfo handles survey retrieval
+// HandleList handles survey list retrieval
+func HandleList(client *mongo.Client) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		surveyCollection := client.Database("drawing_survey").Collection("surveys")
+
+		surveys := make([]Survey, 0)
+
+		// List all surveys
+		cur, err := surveyCollection.
+			Find(context.TODO(), bson.D{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "database error",
+			})
+			return
+		}
+
+		for cur.Next(context.TODO()) {
+			var survey Survey
+			err := cur.Decode(&survey)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": "database error",
+				})
+				return
+			}
+			surveys = append(surveys, survey)
+		}
+
+		res := make([]gin.H, len(surveys))
+		for i := 0; i < len(surveys); i++ {
+			res[i] = gin.H{
+				"surveyID": surveys[i].ID,
+			}
+		}
+		c.JSON(http.StatusOK, res)
+	}
+}
+
+// HandleInfo handles single survey retrieval
 func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		surveyCollection := client.Database("drawing_survey").Collection("surveys")
