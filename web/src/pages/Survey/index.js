@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import Question from './Question';
 import Finalize from './Finalize';
 import Done from './Done';
+import Error from './Error';
 import client from '../../client';
 
 export default function Survey() {
@@ -15,19 +16,24 @@ export default function Survey() {
   const [answers, setAnswers] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
 
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const getSurvey = async () => {
-      const res = await client.get(`/survey/${surveyID}`);
-      setSurveyData(res.data);
-      setQuestions(
-        new Array(res.data.numQuestions)
-          .fill(null)
-          .map(_ => res.data.classes[Math.floor(Math.random() * res.data.classes.length)])
-      );
-      setAnswers(new Array(res.data.numQuestions).fill(null));
+      try {
+        const res = await client.get(`/survey/${surveyID}`);
+        setSurveyData(res.data);
+        setQuestions(
+          new Array(res.data.numQuestions)
+            .fill(null)
+            .map(_ => res.data.classes[Math.floor(Math.random() * res.data.classes.length)])
+        );
+        setAnswers(new Array(res.data.numQuestions).fill(null));
+      } catch (err) {
+        setErrorCode(err.response.status);
+      }
     }
     getSurvey();
   }, []);
@@ -64,9 +70,14 @@ export default function Survey() {
     try {
       const res = await client.post(`/survey/${surveyID}/submit`, params);
       setIsDone(true);
-    } catch (e) {
-      console.log(e.response);
+    } catch (err) {
+      setErrorCode(err.response.status);
     }
+  }
+
+  // Error occured
+  if (errorCode) {
+    return <Error errorCode={errorCode} />
   }
 
   // Survey data has not been loaded yet

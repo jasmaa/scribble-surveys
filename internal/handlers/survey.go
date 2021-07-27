@@ -98,10 +98,10 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 	}
 }
 
-// HandleInfo handles survey creation
+// HandleInfo handles survey retrieval
 func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		collection := client.Database("drawing_survey").Collection("surveys")
+		surveyCollection := client.Database("drawing_survey").Collection("surveys")
 		surveyID := c.Param("surveyID")
 
 		var survey Survey
@@ -109,17 +109,17 @@ func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 		// Find survey by id
 		objectID, err := primitive.ObjectIDFromHex(surveyID)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"error": "invalid id",
 			})
 			return
 		}
-		err = collection.
+		err = surveyCollection.
 			FindOne(context.TODO(), bson.M{"_id": objectID}).
 			Decode(&survey)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "database error",
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "survey not found",
 			})
 			return
 		}
@@ -143,7 +143,7 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 		// Check if survey exists
 		objectID, err := primitive.ObjectIDFromHex(surveyID)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusNotFound, gin.H{
 				"error": "invalid id",
 			})
 			return
