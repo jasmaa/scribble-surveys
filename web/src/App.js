@@ -1,12 +1,18 @@
+import { Route, Switch } from 'react-router';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Home from './pages/Home';
 import SurveyList from './pages/SurveyList';
 import Survey from './pages/Survey';
 import './App.css';
 
 function App() {
   return (
-    <div>
-      <Survey />
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/survey/:surveyID" render={props => <Survey key={props.match.params.surveyID} />} />
+        <Route exact path="/" component={Home} />
+      </Switch>
+    </Router>
   );
 }
 

@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-
+import { useParams } from "react-router";
 import Question from './Question';
 import Finalize from './Finalize';
+import Done from './Done';
 import client from '../../client';
 
-export default function Survey({ surveyID }) {
+export default function Survey() {
+
+  const { surveyID } = useParams();
 
   const [surveyData, setSurveyData] = useState(null);
   const [currQuestion, setCurrQuestion] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [isReady, setIsReady] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const canvasRef = useRef(null);
 
@@ -59,16 +63,25 @@ export default function Survey({ surveyID }) {
 
     try {
       const res = await client.post(`/survey/${surveyID}/submit`, params);
-      // TODO: redirect to done
+      setIsDone(true);
     } catch (e) {
       console.log(e.response);
     }
   }
 
+  // Survey data has not been loaded yet
   if (!surveyData || !canvasRef) {
     return <p>Loading...</p>
   }
 
+  // Survey is done
+  if (isDone) {
+    return (
+      <Done msg={surveyData.message ?? 'Thank you for taking this survey!'} />
+    );
+  }
+
+  // Survey is being taken
   return (
     <div>
       {
