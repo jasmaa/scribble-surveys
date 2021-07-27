@@ -9,8 +9,8 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/survey/all" component={SurveyList} />
-        <Route exact path="/survey/:surveyID" render={props => <Survey key={props.match.params.surveyID} />} />
+        <Route exact path="/surveys" component={SurveyList} />
+        <Route exact path="/surveys/:surveyID" render={props => <Survey key={props.match.params.surveyID} />} />
         <Route exact path="/" component={Home} />
       </Switch>
     </Router>

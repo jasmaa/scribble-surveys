@@ -23,7 +23,7 @@ export default function Survey() {
   useEffect(() => {
     const getSurvey = async () => {
       try {
-        const res = await client.get(`/survey/${surveyID}`);
+        const res = await client.get(`/surveys/${surveyID}`);
         setSurveyData(res.data);
         setQuestions(
           new Array(res.data.numQuestions)
@@ -68,7 +68,7 @@ export default function Survey() {
     params.append('entries', JSON.stringify(entries));
 
     try {
-      const res = await client.post(`/survey/${surveyID}/submit`, params);
+      const res = await client.post(`/surveys/${surveyID}/submit`, params);
       setIsDone(true);
     } catch (err) {
       setErrorCode(err.response.status);

@@ -8,7 +8,7 @@ export default function SurveyList() {
   useEffect(() => {
     const getSurveys = async () => {
       try {
-        const res = await client.get('/survey');
+        const res = await client.get('/surveys');
         setSurveys(res.data);
       } catch (err) {
         console.log(err);
@@ -26,7 +26,7 @@ export default function SurveyList() {
       <ul>
         {surveys.map(survey => (
           <li>
-            <a href={`/survey/${survey.surveyID}`}>{survey.surveyID}</a>
+            <a href={`/surveys/${survey.surveyID}`}>{survey.surveyID}</a>
           </li>
         ))}
       </ul>
