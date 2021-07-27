@@ -37,6 +37,8 @@ type Entry struct {
 	Entry string `json:"entry"`
 }
 
+const DURATION = 7 * time.Second
+
 // HandleCreate handles survey creation
 func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 	return func(c *gin.Context) {
@@ -97,7 +99,9 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 			SecretToken:  uuid.New().String(),
 		}
 
-		res, err := collection.InsertOne(context.Background(), survey)
+		ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		res, err := collection.InsertOne(ctx, survey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "database error",
@@ -121,13 +125,16 @@ func HandleList(client *mongo.Client) func(c *gin.Context) {
 		surveys := make([]Survey, 0)
 
 		// List all surveys
-		cur, err := surveyCollection.Find(context.Background(), bson.D{})
+		ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		cur, err := surveyCollection.Find(ctx, bson.D{})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "database error",
 			})
 			return
 		}
+		defer cur.Close(ctx)
 		for cur.Next(context.TODO()) {
 			var survey Survey
 			err := cur.Decode(&survey)
@@ -167,8 +174,10 @@ func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 			})
 			return
 		}
+		ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
 		err = surveyCollection.
-			FindOne(context.Background(), bson.M{"_id": objectID}).
+			FindOne(ctx, bson.M{"_id": objectID}).
 			Decode(&survey)
 		if err == mongo.ErrNoDocuments {
 			c.JSON(http.StatusNotFound, gin.H{
@@ -208,8 +217,10 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 			})
 			return
 		}
+		ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
 		err = surveyCollection.
-			FindOne(context.Background(), bson.M{"_id": objectID}).
+			FindOne(ctx, bson.M{"_id": objectID}).
 			Decode(&survey)
 		if err == mongo.ErrNoDocuments {
 			c.JSON(http.StatusNotFound, gin.H{
@@ -263,7 +274,9 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 			Entries:   entries,
 			Timestamp: time.Now(),
 		}
-		_, err = submissionCollection.InsertOne(context.Background(), submission)
+		ctx, cancel = context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		_, err = submissionCollection.InsertOne(ctx, submission)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
 			return
