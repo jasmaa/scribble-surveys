@@ -83,6 +83,7 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 			NumQuestions: numQuestions,
 			SecretToken:  uuid.New().String(),
 		}
+
 		res, err := collection.InsertOne(context.Background(), survey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -107,15 +108,13 @@ func HandleList(client *mongo.Client) func(c *gin.Context) {
 		surveys := make([]Survey, 0)
 
 		// List all surveys
-		cur, err := surveyCollection.
-			Find(context.TODO(), bson.D{})
+		cur, err := surveyCollection.Find(context.Background(), bson.D{})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "database error",
 			})
 			return
 		}
-
 		for cur.Next(context.TODO()) {
 			var survey Survey
 			err := cur.Decode(&survey)
@@ -155,11 +154,16 @@ func HandleInfo(client *mongo.Client) func(c *gin.Context) {
 			return
 		}
 		err = surveyCollection.
-			FindOne(context.TODO(), bson.M{"_id": objectID}).
+			FindOne(context.Background(), bson.M{"_id": objectID}).
 			Decode(&survey)
-		if err != nil {
+		if err == mongo.ErrNoDocuments {
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": "survey not found",
+			})
+			return
+		} else if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "database error",
 			})
 			return
 		}
@@ -189,11 +193,16 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 			return
 		}
 		err = surveyCollection.
-			FindOne(context.TODO(), bson.M{"_id": objectID}).
+			FindOne(context.Background(), bson.M{"_id": objectID}).
 			Decode(&survey)
-		if err != nil {
+		if err == mongo.ErrNoDocuments {
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": "survey not found",
+			})
+			return
+		} else if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "database error",
 			})
 			return
 		}
