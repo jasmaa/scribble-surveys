@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CanvasDraw from "react-canvas-draw";
 
 export default function Question({ canvasRef, currQuestion, questions, answers, surveyData, moveToQuestion, setIsReady }) {

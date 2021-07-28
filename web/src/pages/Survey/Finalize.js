@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import CanvasDraw from "react-canvas-draw";
 
 export default function Finalize({ currQuestion, questions, answers, surveyData, moveToQuestion, submitSurvey, setIsReady }) {

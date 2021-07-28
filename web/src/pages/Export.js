@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Flash from '../components/Flash';
-import client from '../client';
+import Flash from 'components/Flash';
+import client from 'client';
 import * as FileDownload from 'js-file-download';
 
 export default function Export() {

@@ -4,7 +4,7 @@ import Question from './Question';
 import Finalize from './Finalize';
 import Done from './Done';
 import Error from './Error';
-import client from '../../client';
+import client from 'client';
 
 export default function Survey() {
 
