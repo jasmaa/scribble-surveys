@@ -94,34 +94,35 @@ export default function Survey() {
 
   // Survey is being taken
   return (
-    <div>
-      {
-        currQuestion < surveyData.numQuestions
-          ? (
-            <Question
-              canvasRef={canvasRef}
-              currQuestion={currQuestion}
-              questions={questions}
-              answers={answers}
-              surveyData={surveyData}
-              moveToQuestion={moveToQuestion}
-              setIsReady={setIsReady}
-            />
-          )
-          : (
-            <Finalize
-              canvasRef={canvasRef}
-              currQuestion={currQuestion}
-              questions={questions}
-              answers={answers}
-              surveyData={surveyData}
-              moveToQuestion={moveToQuestion}
-              submitSurvey={submitSurvey}
-              setIsReady={setIsReady}
-            />
-          )
-      }
-      <pre>{JSON.stringify(answers, null, 2)}</pre>
+    <div className="row">
+      <div className="col-lg-4 offset-lg-4 d-flex flex-column align-items-center my-4">
+        {
+          currQuestion < surveyData.numQuestions
+            ? (
+              <Question
+                canvasRef={canvasRef}
+                currQuestion={currQuestion}
+                questions={questions}
+                answers={answers}
+                surveyData={surveyData}
+                moveToQuestion={moveToQuestion}
+                setIsReady={setIsReady}
+              />
+            )
+            : (
+              <Finalize
+                canvasRef={canvasRef}
+                currQuestion={currQuestion}
+                questions={questions}
+                answers={answers}
+                surveyData={surveyData}
+                moveToQuestion={moveToQuestion}
+                submitSurvey={submitSurvey}
+                setIsReady={setIsReady}
+              />
+            )
+        }
+      </div>
     </div>
   );
 }

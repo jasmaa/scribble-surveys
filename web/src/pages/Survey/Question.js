@@ -19,25 +19,31 @@ export default function Question({ canvasRef, currQuestion, questions, answers, 
 
   return (
     <>
-      <h1>{surveyData.title}</h1>
-      <h2>Question {currQuestion + 1}: Draw "{questions[currQuestion]}"</h2>
+      <h1 className="text-center">{surveyData.title}</h1>
+      
+      <h2 className="mt-3">Question {currQuestion + 1}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
+
+      <div className="my-3">
+        <button className="btn btn-danger" onClick={() => {
+          canvasRef.current.clear();
+        }}>Clear</button>
+      </div>
 
       <CanvasDraw
         ref={canvasRef}
         lazyRadius={0}
         immediateLoading={true}
       />
-      <button onClick={() => {
-        canvasRef.current.clear();
-      }}>Reset</button>
 
-      <button disabled={currQuestion === 0} onClick={() => {
-        moveToQuestion(currQuestion - 1);
-      }}>Prev</button>
+      <div className="mt-3">
+        <button className="btn btn-primary m-1" disabled={currQuestion === 0} onClick={() => {
+          moveToQuestion(currQuestion - 1);
+        }}>Prev</button>
 
-      <button onClick={() => {
-        moveToQuestion(currQuestion + 1);
-      }}>Next</button>
+        <button className="btn btn-primary m-1" onClick={() => {
+          moveToQuestion(currQuestion + 1);
+        }}>Next</button>
+      </div>
     </>
   )
 }

@@ -16,16 +16,20 @@ export default function Finalize({ currQuestion, questions, answers, surveyData,
 
   return (
     <>
-      <h1>{surveyData.title}: Review</h1>
+      <h1 className="text-center">{surveyData.title}: Review</h1>
       {
         new Array(surveyData.numQuestions)
           .fill(null)
           .map((_, i) => (
             <>
-              <h2>Question {i + 1}: Draw "{questions[i]}"</h2>
-              <button onClick={() => {
-                moveToQuestion(i);
-              }}>Edit</button>
+              <h2 className="mt-3">Question {i + 1}: <strong>Draw "{questions[i]}"</strong></h2>
+
+              <div className="my-3">
+                <button className="btn btn-warning" onClick={() => {
+                  moveToQuestion(i);
+                }}>Edit</button>
+              </div>
+
               <CanvasDraw
                 ref={el => previewCanvasRefs.current[i] = el}
                 lazyRadius={0}
@@ -35,7 +39,7 @@ export default function Finalize({ currQuestion, questions, answers, surveyData,
             </>
           ))
       }
-      <button onClick={submitSurvey}>Submit</button>
+      <button className="btn btn-primary mt-5" onClick={submitSurvey}>Submit</button>
     </>
   )
 }
