@@ -22,7 +22,8 @@ export default function SurveyList() {
   }
 
   return (
-    <div>
+    <div className="container">
+      <h1 className="my-4">All Surveys</h1>
       <ul>
         {surveys.map(survey => (
           <li>

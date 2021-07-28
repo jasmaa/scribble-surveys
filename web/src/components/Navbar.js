@@ -16,7 +16,7 @@ export default function AppNavbar() {
 
   return (
     <div>
-      <Navbar className="px-3" color="light" light expand="md">
+      <Navbar className="px-3" dark expand="md">
         <NavbarBrand href="/">Scribble Surveys</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>

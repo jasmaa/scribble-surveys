@@ -1,0 +1,17 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 30em;
+}
+
+.section-primary {
+  color: white;
+  background-color: black;
+}
+
+.section-secondary{
+  color: white;
+  background-color: #212529;
+}

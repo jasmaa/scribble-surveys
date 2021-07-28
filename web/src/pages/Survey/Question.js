@@ -21,9 +21,9 @@ export default function Question({ canvasRef, currQuestion, questions, answers, 
     <>
       <h1 className="text-center">{surveyData.title}</h1>
       
-      <h2 className="mt-3">Question {currQuestion + 1}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
+      <h2 className="mt-1">Question {currQuestion + 1}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
 
-      <div className="my-3">
+      <div className="my-2">
         <button className="btn btn-danger" onClick={() => {
           canvasRef.current.clear();
         }}>Clear</button>

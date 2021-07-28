@@ -11,16 +11,14 @@ function App() {
   return (
     <div>
       <Navbar />
-      <div className="container">
-        <Router>
-          <Switch>
-            <Route exact path="/surveys" component={SurveyList} />
-            <Route exact path="/surveys/:surveyID" render={props => <Survey key={props.match.params.surveyID} />} />
-            <Route exact path="/export" component={Export} />
-            <Route exact path="/" component={Home} />
-          </Switch>
-        </Router>
-      </div>
+      <Router>
+        <Switch>
+          <Route exact path="/surveys" component={SurveyList} />
+          <Route exact path="/surveys/:surveyID" render={props => <Survey key={props.match.params.surveyID} />} />
+          <Route exact path="/export" component={Export} />
+          <Route exact path="/" component={Home} />
+        </Switch>
+      </Router>
     </div>
   );
 }
