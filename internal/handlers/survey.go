@@ -1,9 +1,14 @@
 package handlers
 
 import (
+	"archive/zip"
 	"context"
 	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -135,7 +140,9 @@ func HandleList(client *mongo.Client) func(c *gin.Context) {
 			return
 		}
 		defer cur.Close(ctx)
-		for cur.Next(context.TODO()) {
+		ctx, cancel = context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		for cur.Next(ctx) {
 			var survey Survey
 			err := cur.Decode(&survey)
 			if err != nil {
@@ -286,8 +293,164 @@ func HandleSubmit(client *mongo.Client) func(c *gin.Context) {
 }
 
 // HandleExport handles survey creation
-func HandleExport() func(c *gin.Context) {
+func HandleExport(client *mongo.Client) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		c.String(http.StatusOK, "export")
+		surveyCollection := client.Database("drawing_survey").Collection("surveys")
+		submissionCollection := client.Database("drawing_survey").Collection("submissions")
+		surveyID := c.Param("surveyID")
+
+		var survey Survey
+
+		// Check if survey exists
+		objectID, err := primitive.ObjectIDFromHex(surveyID)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "invalid id",
+			})
+			return
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		err = surveyCollection.
+			FindOne(ctx, bson.M{"_id": objectID}).
+			Decode(&survey)
+		if err == mongo.ErrNoDocuments {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "survey not found",
+			})
+			return
+		} else if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "database error",
+			})
+			return
+		}
+
+		// Get and validate token
+		secretToken := c.Query("secretToken")
+		if len(secretToken) == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "secretToken is required",
+			})
+			return
+		}
+		if secretToken != survey.SecretToken {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "secretToken was incorrect",
+			})
+			return
+		}
+
+		// Query submissions for survey
+		ctx, cancel = context.WithTimeout(context.Background(), DURATION)
+		defer cancel()
+		cur, err := submissionCollection.Find(ctx, bson.D{{"surveyid", surveyID}})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "database error",
+			})
+			return
+		}
+		defer cur.Close(ctx)
+
+		// Create archive
+		zipFile, err := createArchive(os.TempDir(), cur)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "error creating archive",
+			})
+			return
+		}
+
+		// Send archive
+		zipFile, err = os.Open(zipFile.Name())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "error creating archive",
+			})
+			return
+		}
+		defer func() {
+			zipFile.Close()
+			os.Remove(zipFile.Name())
+		}()
+
+		zipInfo, err := zipFile.Stat()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "error creating archive",
+			})
+			return
+		}
+
+		extraHeaders := map[string]string{
+			"Content-Disposition": fmt.Sprintf("attachment; filename=\"survey%s-%d.zip\"", surveyID, time.Now().Unix()),
+		}
+		c.DataFromReader(http.StatusOK, zipInfo.Size(), "applciation/octet-stream", zipFile, extraHeaders)
 	}
+}
+
+func createArchive(zipDir string, cur *mongo.Cursor) (*os.File, error) {
+	zipFile, err := ioutil.TempFile(zipDir, "submissions.zip")
+	if err != nil {
+		return nil, err
+	}
+	defer zipFile.Close()
+
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+
+	// Retrieve and add submissions to archive
+	ctx, cancel := context.WithTimeout(context.Background(), DURATION)
+	defer cancel()
+	for cur.Next(ctx) {
+		var submission Submission
+		err := cur.Decode(&submission)
+		if err != nil {
+			return nil, err
+		}
+		err = addSubmissionToArchive(zipDir, zipWriter, submission)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return zipFile, nil
+}
+
+func addSubmissionToArchive(zipDir string, zipWriter *zip.Writer, submission Submission) error {
+	// Save blob to temp file
+	b, _ := json.Marshal(submission)
+	blobName := fmt.Sprintf("%d.json", submission.Timestamp.Unix())
+	blobFile, err := ioutil.TempFile(zipDir, blobName)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		blobFile.Close()
+		os.Remove(blobFile.Name())
+	}()
+
+	ioutil.WriteFile(blobFile.Name(), b, 0755)
+
+	// Add blobs to archive
+	blobInfo, err := blobFile.Stat()
+	if err != nil {
+		return err
+	}
+
+	header, err := zip.FileInfoHeader(blobInfo)
+	if err != nil {
+		return err
+	}
+	header.Name = blobName
+	header.Method = zip.Deflate
+
+	writer, err := zipWriter.CreateHeader(header)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(writer, blobFile)
+	return err
 }

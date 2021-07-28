@@ -21,7 +21,7 @@
 
 ## Routes
 
-    POST /create
+    POST /surveys
     {
       numQuestions: Integer
       classes: [...]
@@ -31,7 +31,7 @@
       secretToken: String
     }
 
-    GET /survey/{surveyID}/info
+    GET /surveys/{surveyID}
     200 {
       numQuestions: Integer
       classes: [String]
@@ -40,23 +40,20 @@
       error: String
     }
 
-    POST /survey/{surveyID}/submit
+    POST /surveys/{surveyID}/submit
     {
       entries: [{
         class: String
         entry: String
       }]
     }
-    200
+    200 {}
     404 {
       error: String
     }
 
-    POST /survey/{surveyID}/export
-    {
-      secretToken: String
-    }
-    200 export.zip
+    GET /surveys/{surveyID}/export?secretToken: String
+    200 survey{surveyID}-{unix time}.zip
     404 {
       error: String
     }

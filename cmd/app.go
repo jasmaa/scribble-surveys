@@ -52,7 +52,7 @@ func main() {
 	apiV1.GET("/surveys", handlers.HandleList(client))
 	apiV1.GET("/surveys/:surveyID", handlers.HandleInfo(client))
 	apiV1.POST("/surveys/:surveyID/submit", handlers.HandleSubmit(client))
-	apiV1.POST("/surveys/:surveyID/export", handlers.HandleExport())
+	apiV1.GET("/surveys/:surveyID/export", handlers.HandleExport(client))
 
 	r.Run(fmt.Sprintf(":%s", port))
 }
