@@ -383,10 +383,11 @@ func HandleExport(client *mongo.Client) func(c *gin.Context) {
 			return
 		}
 
+		fname := fmt.Sprintf("survey%s-%d.zip", surveyID, time.Now().Unix())
 		extraHeaders := map[string]string{
-			"Content-Disposition": fmt.Sprintf("attachment; filename=\"survey%s-%d.zip\"", surveyID, time.Now().Unix()),
+			"Content-Disposition": fmt.Sprintf("attachment; filename=\"%s\"", fname),
 		}
-		c.DataFromReader(http.StatusOK, zipInfo.Size(), "applciation/octet-stream", zipFile, extraHeaders)
+		c.DataFromReader(http.StatusOK, zipInfo.Size(), "application/octet-stream", zipFile, extraHeaders)
 	}
 }
 

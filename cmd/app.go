@@ -45,7 +45,10 @@ func main() {
 
 	r := gin.Default()
 
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		ExposeHeaders:   []string{"Content-Disposition"},
+	}))
 
 	apiV1 := r.Group("/api/v1")
 	apiV1.POST("/surveys", handlers.HandleCreate(client))
