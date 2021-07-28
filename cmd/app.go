@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/jasmaa/drawing-survey/internal/handlers"
+	"github.com/jasmaa/scribble-surveys/internal/handlers"
 )
 
 func init() {

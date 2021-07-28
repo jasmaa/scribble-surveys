@@ -1,3 +1,3 @@
-# Drawing Survey
+# Sribble Surveys
 
-Survey tool for collecting drawings
+Web app for collecting drawings

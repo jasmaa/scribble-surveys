@@ -1,4 +1,4 @@
-module github.com/jasmaa/drawing-survey
+module github.com/jasmaa/scribble-surveys
 
 go 1.14
 
