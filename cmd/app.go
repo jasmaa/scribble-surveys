@@ -31,6 +31,7 @@ func main() {
 	}
 
 	mongoURI := os.Getenv("MONGO_URI")
+	appEnv := os.Getenv("APP_ENV")
 
 	// Connect to Mongo
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
@@ -51,10 +52,13 @@ func main() {
 		ExposeHeaders:   []string{"Content-Disposition"},
 	}))
 
-	r.Use(static.Serve("/", static.LocalFile("./web/build", true)))
-	r.NoRoute(func(c *gin.Context) {
-		c.File("./web/build/index.html")
-	})
+	// Only serve static build in production
+	if appEnv == "production" {
+		r.Use(static.Serve("/", static.LocalFile("./web/build", true)))
+		r.NoRoute(func(c *gin.Context) {
+			c.File("./web/build/index.html")
+		})
+	}
 
 	apiV1 := r.Group("/api/v1")
 	apiV1.POST("/surveys", handlers.HandleCreate(client))

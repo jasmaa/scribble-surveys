@@ -12,10 +12,10 @@ export default function Flash({ messages }) {
   return (
     <div>
       {infoMessages.map(({ message }, i) => (
-        <div key={`info-${i}`} class="alert alert-primary">{message}</div>
+        <div key={`info-${i}`} className="alert alert-primary">{message}</div>
       ))}
       {errorMessages.map(({ message }, i) => (
-        <div key={`error-${i}`} class="alert alert-danger">Error: {message}</div>
+        <div key={`error-${i}`} className="alert alert-danger">Error: {message}</div>
       ))}
     </div>
   );
