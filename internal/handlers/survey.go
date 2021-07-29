@@ -94,6 +94,12 @@ func HandleCreate(client *mongo.Client) func(c *gin.Context) {
 			})
 			return
 		}
+		if numQuestions < 1 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "numQuestions must be positive",
+			})
+			return
+		}
 
 		// Insert survey
 		survey := Survey{
