@@ -18,40 +18,38 @@ export default function Done({ surveyID, secretToken }) {
   }
 
   return (
-    <div className="container my-4">
+    <>
       <div className="row">
         <div className="d-flex flex-column align-items-center">
-          <h1 className="mb-4">Survey successfully created!</h1>
+          <h1 className="text-center mb-4">Survey successfully created!</h1>
           <p>Please copy or download your credentials:</p>
         </div>
       </div>
 
       <div className="row">
-        <div className="col-lg-6 offset-lg-3 my-4">
-          <div className="form-group">
-            <label htmlFor="surveyIDInput">Survey ID</label>
-            <input id="surveyIDInput" className="form-control" value={surveyID} />
-          </div>
-          <div className="form-group mt-4">
-            <label htmlFor="secretTokenInput">Secret Token</label>
+        <div className="form-group">
+          <label htmlFor="surveyIDInput">Survey ID</label>
+          <input id="surveyIDInput" className="form-control" value={surveyID} />
+        </div>
+        <div className="form-group mt-4">
+          <label htmlFor="secretTokenInput">Secret Token</label>
 
-            <div className="input-group">
-              <input
-                id="secretTokenInput"
-                className="form-control"
-                type={secretTokenInputType}
-                value={secretToken}
-                onMouseOver={evt => {
-                  setSecretTokenInputType('text');
-                }}
-                onMouseOut={evt => {
-                  setSecretTokenInputType('password');
-                }}
-                onClick={copySecretToken}
-              />
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" onClick={copySecretToken}>Copy</button>
-              </div>
+          <div className="input-group">
+            <input
+              id="secretTokenInput"
+              className="form-control"
+              type={secretTokenInputType}
+              value={secretToken}
+              onMouseOver={evt => {
+                setSecretTokenInputType('text');
+              }}
+              onMouseOut={evt => {
+                setSecretTokenInputType('password');
+              }}
+              onClick={copySecretToken}
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" onClick={copySecretToken}>Copy</button>
             </div>
           </div>
         </div>
@@ -62,6 +60,6 @@ export default function Done({ surveyID, secretToken }) {
           <button className="btn btn-primary" onClick={downloadCredentials}>Download</button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
