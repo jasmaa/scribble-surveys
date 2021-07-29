@@ -14,8 +14,8 @@ export default function Home() {
       <div className={`${style['section']} ${style['section-secondary']}`}>
         <h1 className="display-3 mb-5">Get Started</h1>
         <div>
-          <a className="btn btn-primary mx-1" href="/surveys">Take Surveys</a>
-          <a className="btn btn-info mx-1" href="/create">Create a Survey</a>
+          <a className="btn btn-primary mx-2" href="/surveys">Take Surveys</a>
+          <a className="btn btn-info mx-2" href="/create">Create a Survey</a>
         </div>
       </div>
     </div>

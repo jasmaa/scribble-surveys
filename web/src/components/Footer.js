@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="container">
         <div className="row">
           <div className="col-8">
-            <h5>Scribble Survey</h5>
+            <h5>Scribble Surveys</h5>
             <p>Fast surveys for collecting drawings</p>
           </div>
           <div className="col-4 d-flex justify-content-end">

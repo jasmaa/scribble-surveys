@@ -24,7 +24,7 @@ export default function Finalize({ questions, answers, surveyData, moveToQuestio
             <>
               <h2 className="mt-5">{i + 1}/{surveyData.numQuestions}: <strong>Draw "{questions[i]}"</strong></h2>
 
-              <button className="btn btn-info my-2" onClick={() => {
+              <button className="btn btn-info my-3" onClick={() => {
                 moveToQuestion(i);
               }}>Edit</button>
 

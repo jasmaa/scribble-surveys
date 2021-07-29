@@ -19,11 +19,9 @@ export default function Question({ canvasRef, currQuestion, questions, answers, 
 
   return (
     <>
-      <h1 className="text-center">{surveyData.title}</h1>
-      
       <h2>{currQuestion + 1}/{surveyData.numQuestions}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
 
-      <div className="my-2">
+      <div className="my-3">
         <button className="btn btn-danger" onClick={() => {
           canvasRef.current.clear();
         }}>Clear</button>

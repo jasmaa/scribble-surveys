@@ -1,6 +1,6 @@
 # Scribble Surveys
 
-Web app for collecting drawings
+Fast surveys for collecting drawings
 
 ![Screenshot of drawing space](docs/screenshot01.png)
 
