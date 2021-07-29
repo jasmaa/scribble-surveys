@@ -3,7 +3,8 @@ module github.com/jasmaa/scribble-surveys
 go 1.14
 
 require (
-	github.com/gin-contrib/cors v1.3.1 // indirect
+	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
@@ -18,6 +19,5 @@ require (
 	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620 // indirect
 	golang.org/x/sys v0.0.0-20201218084310-7d0127a74742 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

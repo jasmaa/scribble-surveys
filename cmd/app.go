@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -49,6 +50,11 @@ func main() {
 		AllowAllOrigins: true,
 		ExposeHeaders:   []string{"Content-Disposition"},
 	}))
+
+	r.Use(static.Serve("/", static.LocalFile("./web/build", true)))
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./web/build/index.html")
+	})
 
 	apiV1 := r.Group("/api/v1")
 	apiV1.POST("/surveys", handlers.HandleCreate(client))
