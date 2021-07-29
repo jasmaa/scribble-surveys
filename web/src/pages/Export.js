@@ -30,8 +30,8 @@ export default function Export() {
   }
 
   return (
-    <div className="container">
-      <h1 className="my-4">Export Submissions</h1>
+    <div className="container my-4">
+      <h1 className="mb-4">Export Submissions</h1>
 
       <Flash messages={messages} />
 

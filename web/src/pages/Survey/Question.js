@@ -21,7 +21,7 @@ export default function Question({ canvasRef, currQuestion, questions, answers, 
     <>
       <h1 className="text-center">{surveyData.title}</h1>
       
-      <h2 className="mt-1">Question {currQuestion + 1}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
+      <h2>{currQuestion + 1}/{surveyData.numQuestions}: <strong>Draw "{questions[currQuestion]}"</strong></h2>
 
       <div className="my-2">
         <button className="btn btn-danger" onClick={() => {

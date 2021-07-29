@@ -94,9 +94,9 @@ export default function Survey() {
 
   // Survey is being taken
   return (
-    <div className="container">
+    <div className="container my-4">
       <div className="row">
-        <div className="col-lg-4 offset-lg-4 d-flex flex-column align-items-center my-4">
+        <div className="col-lg-4 offset-lg-4 d-flex flex-column align-items-center">
           {
             currQuestion < surveyData.numQuestions
               ? (

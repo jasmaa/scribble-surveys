@@ -5,9 +5,9 @@ import client from "client";
 
 export default function Create() {
 
-  const [title, setTitle] = useState('My title');
+  const [title, setTitle] = useState('');
   const [numQuestions, setNumQuestions] = useState(5);
-  const [classes, setClasses] = useState(['dog', 'cat']);
+  const [classes, setClasses] = useState([]);
   const [currClass, setCurrClass] = useState('');
   const [exitMessage, setExitMessage] = useState('Have a nice day!');
   const [messages, setMessages] = useState([]);
@@ -57,8 +57,8 @@ export default function Create() {
   }
 
   return (
-    <div className="container">
-      <h1 className="my-4">Create Survey</h1>
+    <div className="container my-4">
+      <h1 className="mb-4">Create Survey</h1>
 
       <Flash messages={messages} />
 

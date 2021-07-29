@@ -18,10 +18,10 @@ export default function Done({ surveyID, secretToken }) {
   }
 
   return (
-    <div className="container">
+    <div className="container my-4">
       <div className="row">
         <div className="d-flex flex-column align-items-center">
-          <h1 className="my-4">Survey successfully created!</h1>
+          <h1 className="mb-4">Survey successfully created!</h1>
           <p>Please copy or download your credentials:</p>
         </div>
       </div>

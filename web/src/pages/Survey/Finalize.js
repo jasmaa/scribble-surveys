@@ -22,13 +22,11 @@ export default function Finalize({ questions, answers, surveyData, moveToQuestio
           .fill(null)
           .map((_, i) => (
             <>
-              <h2 className="mt-5">Question {i + 1}: <strong>Draw "{questions[i]}"</strong></h2>
+              <h2 className="mt-5">{i + 1}/{surveyData.numQuestions}: <strong>Draw "{questions[i]}"</strong></h2>
 
-              <div className="my-2">
-                <button className="btn btn-warning" onClick={() => {
-                  moveToQuestion(i);
-                }}>Edit</button>
-              </div>
+              <button className="btn btn-info my-2" onClick={() => {
+                moveToQuestion(i);
+              }}>Edit</button>
 
               <CanvasDraw
                 ref={el => previewCanvasRefs.current[i] = el}
