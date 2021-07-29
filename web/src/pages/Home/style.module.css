@@ -4,7 +4,10 @@
   justify-content: center;
   align-items: center;
   min-height: 30em;
-  padding: 5em;
+  padding-left: 0.5em;
+  padding-right: 00.5em;
+  padding-top: 5em;
+  padding-bottom: 5em;
 }
 
 .section-primary {

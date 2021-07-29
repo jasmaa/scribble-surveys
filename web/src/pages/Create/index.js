@@ -57,7 +57,7 @@ export default function Create() {
   }
 
   return (
-    <div className="container my-4">
+    <>
       <h1 className="mb-4">Create Survey</h1>
 
       <Flash messages={messages} />
@@ -102,6 +102,6 @@ export default function Create() {
 
         <button className="btn btn-success mt-4" onClick={createSurvey}>Create</button>
       </div>
-    </div>
+    </>
   );
 }

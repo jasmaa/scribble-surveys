@@ -30,7 +30,7 @@ export default function Export() {
   }
 
   return (
-    <div className="container my-4">
+    <>
       <h1 className="mb-4">Export Submissions</h1>
 
       <Flash messages={messages} />
@@ -46,7 +46,7 @@ export default function Export() {
         </div>
         <button className="btn btn-success" type="submit">Export</button>
       </form>
-    </div>
+    </>
   );
 
 }

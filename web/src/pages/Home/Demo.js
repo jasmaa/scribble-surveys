@@ -38,7 +38,7 @@ export default function Demo({ timeDelta }) {
   }
 
   return (
-    <div className="d-flex flex-column align-items-center my-5">
+    <div className="d-flex flex-column align-items-center">
       <h2 className="mb-3"><strong>Draw "<span id="demo-name"></span>"</strong></h2>
       <CanvasDraw
         ref={canvasRef}
